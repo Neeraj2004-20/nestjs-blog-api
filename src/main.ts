@@ -12,14 +12,20 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Blog API')
     .setDescription('A complete blog API with authentication')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   
-  await app.listen(3000);
-  console.log('🚀 Application is running on: http://localhost:3000');
-  console.log('📚 Swagger docs: http://localhost:3000/api');
+  const port = parseInt(process.env.PORT || '3000', 10);
+  const appUrl = process.env.APP_URL || process.env.VERCEL_URL 
+    ? `https://${process.env.VERCEL_URL}` 
+    : `http://localhost:${port}`;
+  
+  await app.listen(port);
+  console.log(`🚀 Application is running on: ${appUrl}`);
+  console.log(`📚 Swagger docs: ${appUrl}/api`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 }
 bootstrap();
